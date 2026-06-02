@@ -1,0 +1,54 @@
+==========================================================
+QUICK REVISION: INHERITANCE & POLYMORPHISM (C++)
+==========================================================
+
+CORE IDEA
+- Inheritance: a derived class reuses/extends a base class.
+  "Circle IS-A Shape." Use: class Circle : public Shape {...};
+- Polymorphism: one base pointer, many possible behaviors.
+  Calling area() on a Shape* runs the DERIVED version.
+
+WHY IT MATTERS
+- Write code once against the base type (Shape*), and it
+  works for every present and future derived type.
+- Avoids giant if/else or switch on "what type is this".
+
+KEY RULES
+1. virtual  -> allows a function to be overridden.
+2. = 0      -> pure virtual; class becomes ABSTRACT
+               (cannot be instantiated).
+3. override -> tells the compiler "I am overriding".
+               Catches signature mistakes (e.g. missing const).
+4. Always make the base DESTRUCTOR virtual when deleting
+   objects through a base pointer.
+5. Signatures must match EXACTLY to override (name, params,
+   const-ness, return type).
+
+ABSTRACT BASE (short)
+    class Shape {
+    public:
+        virtual ~Shape() {}            // virtual dtor
+        virtual double area() const = 0;  // pure virtual
+    };
+
+DERIVED + OVERRIDE (short)
+    class Circle : public Shape {
+        double r;
+    public:
+        Circle(double rr) : Shape(), r(rr) {}
+        double area() const override { return 3.14159*r*r; }
+    };
+
+POLYMORPHIC USE (short)
+    Shape* s = new Circle(2.0);
+    s->area();      // calls Circle::area()  (dynamic dispatch)
+    delete s;       // virtual dtor -> correct cleanup
+
+CHAINED INHERITANCE
+    Square : Rectangle : Shape
+    Square reuses Rectangle::area() (side*side).
+
+REMEMBER
+- No virtual  -> the base version is called (static binding). Bug!
+- Abstract class -> cannot do: Shape x;  (compile error).
+==========================================================
